@@ -67,6 +67,8 @@ _onclickResult: function(marker_id, lat, lon, zoom) {
 	OSRM.G.markers.route[index].centerView(zoom);	
 	if( OSRM.G.markers.route.length > 1 )
 		OSRM.Routing.getRoute();
+
+	//OSRM.Routing.getRoute_Redraw();
 },
 
 

@@ -32,10 +32,6 @@ $(document).ready(function(){
 
 					
 					res.results[0].data.forEach(function(row) {
-					//	OSRM.Geocoder.call(OSRM.C.VIA_LABEL, row["row"][0]["latitude"] + " , " + row["row"][0]["longitute"]);
-					//	
-					//	$("#resultText").append('<li>'+ counter + " - "+ row["graph"]["nodes"][0]["labels"][0] + " - " + row["row"][0]["name"]+'</li>');
-
 
 						row["graph"]["nodes"].forEach(function(graphRow){
 					
@@ -45,13 +41,11 @@ $(document).ready(function(){
 							var longitute = graphRow["properties"]["longitute"];
 							var latitude = graphRow["properties"]["latitude"];
 
-							nodes[counter] = '{"id" : '+id+', "label":"'+label+'", "name":"'+nodeName+'", "longitute":'+longitute+',"latitude":'+latitude+'}';
+							nodes[counter] = '{"id" : '+id+', "label":"'+label+'", "name":"'+nodeName+'", "longitute":'+longitute+',"latitude":'+latitude+', "distance":'+0+' }';
 
 							counter = counter + 1;
 						});
 					});
-
-
 
 					//Remove duplicate nodes
 					var uniqueNodes = [];
@@ -59,29 +53,57 @@ $(document).ready(function(){
 					    if($.inArray(el, uniqueNodes) === -1) uniqueNodes.push(el);
 					});
 
+					
+					//Calculate distance from item 1 to other items.
+					for ( i = 0; i < uniqueNodes.length; i++) {
+						uniqueNodes[i] = JSON.parse(uniqueNodes[i]); 
+						uniqueNodes[i]["distance"] = calculateDistance(uniqueNodes[0]["latitude"],uniqueNodes[0]["longitute"],uniqueNodes[i]["latitude"],uniqueNodes[i]["longitute"],"K");
+					};
+
+					//sort by to distance
+					uniqueNodes.sort(function(a, b) { 
+  						return a.distance - b.distance;
+					});
+
 
 					$("#resultText").empty();
 					$("#gui-reset").click();
+
+					//Set start location
 					OSRM.Geocoder.call(OSRM.C.SOURCE_LABEL, source);
 
 					counter = 0;
 					uniqueNodes.forEach(function(row){
 						counter = counter+ 1;
-						row = JSON.parse(row); 
 
 						$("#resultText").append('<li>'+ counter + " - "+ row["label"] + " - " + row["name"]+'</li>');
+
+						//set via location for each graph node
 						OSRM.Geocoder.call(OSRM.C.VIA_LABEL, row["latitude"] + " , " + row["longitute"]);
 
 					});
 
+					//Set end location
 					OSRM.Geocoder.call(OSRM.C.TARGET_LABEL, target);
-					$("#gui-input-target").change();
-
-					var x = "x";
-
-
 				}
 			});
 
 	});
 });
+
+
+function calculateDistance(lat1, lon1, lat2, lon2, unit) {
+	    var radlat1 = Math.PI * lat1/180
+	    var radlat2 = Math.PI * lat2/180
+	    var radlon1 = Math.PI * lon1/180
+	    var radlon2 = Math.PI * lon2/180
+	    var theta = lon1-lon2
+	    var radtheta = Math.PI * theta/180
+	    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+	    dist = Math.acos(dist)
+	    dist = dist * 180/Math.PI
+	    dist = dist * 60 * 1.1515
+	    if (unit=="K") { dist = dist * 1.609344 }
+	    if (unit=="N") { dist = dist * 0.8684 }
+	    return dist
+	}
