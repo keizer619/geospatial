@@ -1,6 +1,84 @@
 var mainURL = "http://localhost:8280/graph/1.0.0/";
 
+
+
+function loadFilterNodesCombo(label)
+{
+		var query =  $("#cypherQuery").val();
+
+            url = mainURL +"label/"+label+"/nodes";
+
+            $.ajax(url, {
+				type: "GET",
+				
+				          headers : {
+                          'Authorization' : 'Bearer 5f0e0d8c2a5477d4a8e79fa2d34f84a'
+                        },
+				contentType: "application/json",
+				error: function(err) {
+					alert(err);
+				},
+				success: function(res) {
+
+
+						res.forEach(function(row){
+						$('#selectFilterNode')
+						         .append($("<option></option>")
+						         .attr("value", row.paged_traverse.split("/")[6])
+						         .text(row.data.name)); 
+					});
+
+
+					
+				}
+			});
+}
+
+function loadLabelCombos() {
+	var query =  $("#cypherQuery").val();
+
+            url = mainURL +"labels";
+
+            $.ajax(url, {
+				type: "GET",
+				
+				          headers : {
+                          'Authorization' : 'Bearer 5f0e0d8c2a5477d4a8e79fa2d34f84a'
+                        },
+				contentType: "application/json",
+				error: function(err) {
+					alert(err);
+				},
+				success: function(res) {
+
+
+						res.forEach(function(row){
+						$('#selectFilterNodeLabel')
+						         .append($("<option></option>")
+						         .attr("value",row)
+						         .text(row)); 
+
+						$('#selectOutputNodeLabel')
+						         .append($("<option></option>")
+						         .attr("value",row)
+						         .text(row)); 
+
+					});
+
+
+					
+				}
+			});
+}
+
+
 $(document).ready(function(){
+
+loadLabelCombos();
+loadFilterNodesCombo("Petrol");
+
+
+
   $("#btnQuery").click(function(){
 			var query =  $("#cypherQuery").val();
 
@@ -61,9 +139,10 @@ $(document).ready(function(){
 					};
 
 					//sort by to distance
-					uniqueNodes.sort(function(a, b) { 
+					/*uniqueNodes.sort(function(a, b) { 
   						return a.distance - b.distance;
 					});
+*/
 
 
 					$("#resultText").empty();
