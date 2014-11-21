@@ -2,6 +2,41 @@ var mainURL = "http://localhost:8280/graph/1.0.0/";
 
 
 
+function loadRelationships (node) {
+			var query =  $("#cypherQuery").val();
+
+            url = mainURL +"node/"+node+"/relationships/all";
+
+            $.ajax(url, {
+				type: "GET",
+				
+				          headers : {
+                          'Authorization' : 'Bearer 5f0e0d8c2a5477d4a8e79fa2d34f84a'
+                        },
+				contentType: "application/json",
+				error: function(err) {
+					alert(err);
+				},
+				success: function(res) {
+
+						  $('#selectRelationship')
+				          .find('option')
+				          .remove()
+				          .end();
+
+						res.forEach(function(row){
+						$('#selectRelationship')
+						         .append($("<option></option>")
+						         .attr("value", row.type)
+						         .text(row.type)); 
+					});
+
+
+					
+				}
+			});
+}
+
 function loadFilterNodesCombo(label)
 {
 		var query =  $("#cypherQuery").val();
@@ -20,6 +55,10 @@ function loadFilterNodesCombo(label)
 				},
 				success: function(res) {
 
+						 $('#selectFilterNode')
+				          .find('option')
+				          .remove()
+				          .end();
 
 						res.forEach(function(row){
 						$('#selectFilterNode')
@@ -52,6 +91,16 @@ function loadLabelCombos() {
 				success: function(res) {
 
 
+						$('#selectFilterNodeLabel')
+				          .find('option')
+				          .remove()
+				          .end();
+
+				         $('#selectOutputNodeLabel')
+				          .find('option')
+				          .remove()
+				          .end();
+
 						res.forEach(function(row){
 						$('#selectFilterNodeLabel')
 						         .append($("<option></option>")
@@ -75,8 +124,16 @@ function loadLabelCombos() {
 $(document).ready(function(){
 
 loadLabelCombos();
-loadFilterNodesCombo("Petrol");
 
+
+
+  $("#selectFilterNodeLabel").change(function() {
+  		loadFilterNodesCombo($("#selectFilterNodeLabel").val());
+});
+
+  $("#selectFilterNode").change(function() {
+  		loadRelationships($("#selectFilterNode").val());
+});
 
 
   $("#btnQuery").click(function(){
