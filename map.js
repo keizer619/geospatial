@@ -125,6 +125,31 @@ $(document).ready(function(){
 
 loadLabelCombos();
 
+  $("#btnTest").click(function(){ 
+
+
+
+  	var queryLine = JSON.parse('{"selectFilterNodeLabel":"'
+  						+$('#selectFilterNodeLabel').val()+'","selectOutputNodeLabel":"'
+  						+$('#selectOutputNodeLabel').val()+'","selectFilterNode":"'
+  						+$('#selectFilterNode option:selected').text()+'","selectRelationship":"'+$('#selectRelationship').val()+'"}');
+
+
+
+  	var query = "MATCH ";
+
+  	query += "("+queryLine['selectFilterNodeLabel']+" { name:'"+queryLine['selectFilterNode']+"' })-["+queryLine['selectRelationship']+"]-("+queryLine['selectOutputNodeLabel']+")";
+  	
+  	query += "RETURN ";
+
+
+  	query += queryLine['selectOutputNodeLabel'];
+
+
+
+  	alert(query);
+
+  });
 
 
   $("#selectFilterNodeLabel").change(function() {
