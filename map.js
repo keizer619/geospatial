@@ -238,10 +238,10 @@ loadLabelCombos();
 					};
 
 					//sort by to distance
-					/*uniqueNodes.sort(function(a, b) { 
+					uniqueNodes.sort(function(a, b) { 
   						return a.distance - b.distance;
 					});
-*/
+
 
 
 					$("#resultText").empty();
