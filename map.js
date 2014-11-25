@@ -1,4 +1,6 @@
 var mainURL = "http://localhost:8280/graph/1.0.0/";
+var queryLine =[];
+
 
 
 
@@ -125,29 +127,18 @@ $(document).ready(function(){
 
 loadLabelCombos();
 
-  $("#btnTest").click(function(){ 
-
-
-
-  	var queryLine = JSON.parse('{"selectFilterNodeLabel":"'
+ $("#btnAdd").click(function(){
+  	
+  	queryLine[queryLine.length] = JSON.parse('{"selectFilterNodeLabel":"'
   						+$('#selectFilterNodeLabel').val()+'","selectOutputNodeLabel":"'
   						+$('#selectOutputNodeLabel').val()+'","selectFilterNode":"'
   						+$('#selectFilterNode option:selected').text()+'","selectRelationship":"'+$('#selectRelationship').val()+'"}');
 
+ 	});
 
+  $("#btnClear").click(function(){ 
 
-  	var query = "MATCH ";
-
-  	query += "("+queryLine['selectFilterNodeLabel']+" { name:'"+queryLine['selectFilterNode']+"' })-["+queryLine['selectRelationship']+"]-("+queryLine['selectOutputNodeLabel']+")";
-  	
-  	query += "RETURN ";
-
-
-  	query += queryLine['selectOutputNodeLabel'];
-
-
-
-  	alert(query);
+  		queryLine = [];
 
   });
 
@@ -162,7 +153,33 @@ loadLabelCombos();
 
 
   $("#btnQuery").click(function(){
-			var query =  $("#cypherQuery").val();
+			  	var query = "MATCH ";
+
+			  	var counter = 0;
+
+			  	queryLine.forEach(function(row) {
+			  		query += "("+row['selectFilterNodeLabel']+" { name:'"+row['selectFilterNode']+"' })-["+row['selectRelationship']+"]-("+row['selectOutputNodeLabel']+")";
+			  		counter++;
+
+			  		if (counter != queryLine.length)
+			  		{
+			  			query += ","
+			  		}
+			  	});
+
+			  	query += "RETURN ";
+			  	counter = 0;
+
+			  	queryLine.forEach(function(row) {
+			  		query += row['selectOutputNodeLabel'];
+
+			  		counter++;
+
+			  		if (counter != queryLine.length)
+			  		{
+			  			query += ","
+			  		}
+			  	});
 
             url = mainURL +"transaction/commit";
 
@@ -229,6 +246,8 @@ loadLabelCombos();
 
 					$("#resultText").empty();
 					$("#gui-reset").click();
+
+					queryLine =[];
 
 					//Set start location
 					OSRM.Geocoder.call(OSRM.C.SOURCE_LABEL, source);
