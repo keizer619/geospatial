@@ -1,4 +1,5 @@
 var mainURL = "http://localhost:8280/graph/1.0.0/";
+var token = "Bearer daf3342bd3b895575ad165df51b06b2e";
 var queryLine =[];
 
 
@@ -13,7 +14,7 @@ function loadRelationships (node) {
 				type: "GET",
 				
 				          headers : {
-                          'Authorization' : 'Bearer 5f0e0d8c2a5477d4a8e79fa2d34f84a'
+                          'Authorization' : token
                         },
 				contentType: "application/json",
 				error: function(err) {
@@ -49,7 +50,7 @@ function loadFilterNodesCombo(label)
 				type: "GET",
 				
 				          headers : {
-                          'Authorization' : 'Bearer 5f0e0d8c2a5477d4a8e79fa2d34f84a'
+                          'Authorization' : token
                         },
 				contentType: "application/json",
 				error: function(err) {
@@ -84,7 +85,7 @@ function loadLabelCombos() {
 				type: "GET",
 				
 				          headers : {
-                          'Authorization' : 'Bearer 5f0e0d8c2a5477d4a8e79fa2d34f84a'
+                          'Authorization' : token
                         },
 				contentType: "application/json",
 				error: function(err) {
@@ -193,7 +194,7 @@ loadLabelCombos();
 					}]
 				}),
 				          headers : {
-                          'Authorization' : 'Bearer 5f0e0d8c2a5477d4a8e79fa2d34f84a'
+                          'Authorization' : token
                         },
 				contentType: "application/json",
 				error: function(err) {
