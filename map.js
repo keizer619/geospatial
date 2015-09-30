@@ -1,5 +1,5 @@
-var mainURL = "http://localhost:8280/graph/1.0.0/";
-var token = "Bearer daf3342bd3b895575ad165df51b06b2e";
+var mainURL = "http://geograph.sb02.stations.graphenedb.com:24789/db/data/";
+var token = "Basic R2VvR3JhcGg6N2dJd1dEMnVGTzhvTWlId3NmNVg=";
 var queryLine =[];
 
 
